@@ -1,1 +1,1 @@
-# BE-Rest-API
+# Backend Golang Capstone Kelompok 23
