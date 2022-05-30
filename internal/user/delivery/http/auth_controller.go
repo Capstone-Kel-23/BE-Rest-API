@@ -157,7 +157,7 @@ func (a *authController) SendVerifyUser(c echo.Context) error {
 	}
 
 	templateData := body_email.VerificationEmailBody{
-		URL:      "http://103.176.79.65/verify/" + code + "/" + url.QueryEscape(user.Email),
+		URL:      "http://103.176.79.65:8080/verify/" + code + "/" + url.QueryEscape(user.Email),
 		Username: user.Username,
 		Subject:  "Verification Email",
 	}
