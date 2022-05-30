@@ -31,14 +31,15 @@ jobs:
           push: true
           tags: nrmadi02/capstone-project:latest
 
-      - name: Start deployment to azure
+      - name: Start deployment to vm
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
+          password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
             echo "starting running docker mini-project"
             docker container rm capstone-project --force
             docker pull nrmadi02/capstone-project:latest
+            docker run -p 8080:8080 --env-file ./.env --name capstone-project --detach nrmadi02/capstone-project:latest
