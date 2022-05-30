@@ -85,7 +85,7 @@ func (a *authController) Register(c echo.Context) error {
 	}
 
 	templateData := body_email.VerificationEmailBody{
-		URL:      "http://103.176.79.65:8080:8080/verify/" + code + "/" + url.QueryEscape(req.Email),
+		URL:      "http://103.176.79.65:8080/verify/" + code + "/" + url.QueryEscape(req.Email),
 		Username: req.Username,
 		Subject:  "Verification Email",
 	}
