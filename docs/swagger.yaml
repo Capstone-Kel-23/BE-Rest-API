@@ -75,7 +75,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.JSONSuccessResult'
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -105,7 +110,12 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/response.JSONSuccessResult'
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
         "400":
           description: Bad Request
           schema:
@@ -113,6 +123,32 @@ paths:
       summary: Register new user
       tags:
       - Auth
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Get all list users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONBadRequestResult'
+      security:
+      - JWT: []
+      summary: Get all list users
+      tags:
+      - User
   /verify/send:
     post:
       consumes:
@@ -131,7 +167,12 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.JSONSuccessResult'
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
         "400":
           description: Bad Request
           schema:

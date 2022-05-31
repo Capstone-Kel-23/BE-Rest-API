@@ -22,6 +22,7 @@ type User struct {
 type Users []User
 
 type UserRepository interface {
+	FindAll() (*Users, error)
 	FindByID(id string) (*User, error)
 	FindByEmail(email string) (*User, error)
 	UpdateVerifiedByEmail(email string, status bool) error
@@ -37,4 +38,5 @@ type AuthUsecase interface {
 
 type UserUsecase interface {
 	GetDetailUserByEmail(email string) (*User, error)
+	GetListAllUsers() (interface{}, error)
 }
