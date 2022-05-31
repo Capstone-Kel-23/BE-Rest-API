@@ -34,3 +34,8 @@ func (u *userRepository) UpdateVerifiedByEmail(email string, status bool) error 
 	err := u.db.Model(&domain.User{}).Where("email = ?", email).Update("verified", status).Error
 	return err
 }
+
+func (u *userRepository) FindAll() (users *domain.Users, err error) {
+	err = u.db.Preload("Roles").Find(&users).Error
+	return users, err
+}

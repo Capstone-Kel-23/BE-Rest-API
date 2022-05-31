@@ -8,6 +8,7 @@ import (
 
 	"github.com/Capstone-Kel-23/BE-Rest-API/app/config"
 	docs "github.com/Capstone-Kel-23/BE-Rest-API/docs"
+	mid "github.com/Capstone-Kel-23/BE-Rest-API/internal/user/delivery/http/middleware"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/gommon/log"
 	echoSwagger "github.com/swaggo/echo-swagger"
@@ -28,6 +29,7 @@ func RunServer() {
 	db := config.InitDB()
 	e := echo.New()
 	e.Use(middleware.CORS())
+	mid.NewGoMiddleware().LogMiddleware(e)
 
 	routers.SetupRouter(e, db)
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
