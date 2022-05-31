@@ -16,10 +16,17 @@ func NewGoMiddleware() *GoMiddleware {
 	return &GoMiddleware{}
 }
 
+func (m *GoMiddleware) LogMiddleware(e *echo.Echo) {
+	e.Use(mid.LoggerWithConfig(mid.LoggerConfig{
+		Format: "method=${method}, uri=${uri}, status=${status}, latency_human=${latency_human}\n",
+	}))
+}
+
 func (m *GoMiddleware) AuthMiddleware() echo.MiddlewareFunc {
 	signingKey := []byte("220220")
 
 	config := mid.JWTConfig{
+		SigningKey: []byte("220220"),
 		ParseTokenFunc: func(auth string, c echo.Context) (interface{}, error) {
 			keyFunc := func(t *jwt.Token) (interface{}, error) {
 				if t.Method.Alg() != "HS256" {
@@ -36,6 +43,13 @@ func (m *GoMiddleware) AuthMiddleware() echo.MiddlewareFunc {
 				return nil, errors.New("invalid token")
 			}
 			return token, nil
+		},
+
+		ErrorHandlerWithContext: func(err error, c echo.Context) error {
+			return c.JSONPretty(401, map[string]interface{}{
+				"messages": "Token expired or invalid",
+				"status":   false,
+			}, "  ")
 		},
 	}
 

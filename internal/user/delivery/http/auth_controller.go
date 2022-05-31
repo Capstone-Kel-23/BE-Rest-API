@@ -42,7 +42,7 @@ func NewAuthController(au domain.AuthUsecase, vu domain.ValidationUsecase, uu do
 // @accept json
 // @Produce json
 // @Router /login [post]
-// @Success 200 {object} response.JSONSuccessResult{}
+// @Success 200 {object} response.JSONSuccessResult{data=interface{}}
 // @Failure 400 {object} response.JSONBadRequestResult{}
 // @Failure 401 {object} response.JSONUnauthorizedResult{}
 func (a *authController) Login(c echo.Context) error {
@@ -68,7 +68,7 @@ func (a *authController) Login(c echo.Context) error {
 // @accept json
 // @Produce json
 // @Router /register [post]
-// @Success 201 {object} response.JSONSuccessResult{}
+// @Success 201 {object} response.JSONSuccessResult{data=interface{}}
 // @Failure 400 {object} response.JSONBadRequestResult{}
 func (a *authController) Register(c echo.Context) error {
 	var req request.UserCreateRequest
@@ -133,7 +133,7 @@ func (a *authController) VerifyUser(c echo.Context) error {
 // @accept json
 // @Produce json
 // @Router /verify/send [post]
-// @Success 200 {object} response.JSONSuccessResult{}
+// @Success 200 {object} response.JSONSuccessResult{data=interface{}}
 // @Failure 400 {object} response.JSONBadRequestResult{}
 // @Failure 404 {object} response.JSONBadRequestResult{}
 func (a *authController) SendVerifyUser(c echo.Context) error {
