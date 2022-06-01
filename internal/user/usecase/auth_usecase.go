@@ -41,6 +41,7 @@ func (a *authUsecase) Login(req *request.LoginRequest) (interface{}, error) {
 		"username": user.Username,
 		"fullname": user.Fullname,
 		"email":    user.Email,
+		"role":     user.Roles[0].Name,
 		"verified": user.Verified,
 		"token":    token,
 	}
