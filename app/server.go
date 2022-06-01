@@ -14,7 +14,7 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-// @title Capstone application Documentation
+// @title Capstone Application Documentation
 // @description This is a Capstone application
 // @version 2.0
 // @BasePath /api/v1
