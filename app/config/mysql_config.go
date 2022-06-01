@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/Capstone-Kel-23/BE-Rest-API/domain"
-	"gorm.io/driver/sqlserver"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
@@ -28,7 +28,7 @@ func InitDB() *gorm.DB {
 		DB_Name:     os.Getenv("DB_NAME"),
 	}
 
-	connectionString := fmt.Sprintf("sqlserver://%s:%s@%s:%s?database=%s",
+	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		config.DB_Username,
 		config.DB_Password,
 		config.DB_Host,
@@ -38,7 +38,7 @@ func InitDB() *gorm.DB {
 
 	var err error
 
-	DB, err = gorm.Open(sqlserver.Open(connectionString), &gorm.Config{})
+	DB, err = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
@@ -49,11 +49,11 @@ func InitDB() *gorm.DB {
 }
 
 func InitialMigration() {
-	err := DB.AutoMigrate(&domain.User{}, &domain.Validation{})
+	err := DB.AutoMigrate(&domain.User{})
 
 	if err != nil {
 		panic("could not connect to db " + err.Error())
 	}
 
-	// seeds.Execute(DB)
+	//seeds.Execute(DB)
 }
