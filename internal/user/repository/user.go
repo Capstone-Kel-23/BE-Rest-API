@@ -39,3 +39,8 @@ func (u *userRepository) FindAll() (users *domain.Users, err error) {
 	err = u.db.Preload("Roles").Find(&users).Error
 	return users, err
 }
+
+func (u *userRepository) FindWithProfile(id string) (user *domain.User, err error) {
+	err = u.db.Preload("Roles").Preload("Profile").Where("id = ?", id).Find(&user).Error
+	return user, err
+}

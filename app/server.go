@@ -3,6 +3,7 @@ package app
 import (
 	"fmt"
 	"github.com/Capstone-Kel-23/BE-Rest-API/app/routers"
+	template_interface "github.com/Capstone-Kel-23/BE-Rest-API/templates/interface"
 	"github.com/labstack/echo/v4/middleware"
 	"os"
 
@@ -29,7 +30,11 @@ func RunServer() {
 	db := config.InitDB()
 	e := echo.New()
 	e.Use(middleware.CORS())
+	e.Use(middleware.Recover())
+	e.Static("/", "public")
 	mid.NewGoMiddleware().LogMiddleware(e)
+
+	e.Renderer = template_interface.NewRenderer("./templates/*.html", true)
 
 	routers.SetupRouter(e, db)
 	e.GET("/swagger/*", echoSwagger.WrapHandler)

@@ -1,10 +1,101 @@
 basePath: /api/v1
 definitions:
+  request.AdditionalCostCreateRequest:
+    properties:
+      name:
+        type: string
+      total:
+        type: number
+      type:
+        type: string
+    type: object
+  request.ClientCreateRequest:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      country:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      phone_number:
+        type: string
+      postal_code:
+        type: string
+      state:
+        type: string
+    type: object
+  request.InvoiceCreateRequest:
+    properties:
+      additional_costs:
+        items:
+          $ref: '#/definitions/request.AdditionalCostCreateRequest'
+        type: array
+      client:
+        $ref: '#/definitions/request.ClientCreateRequest'
+      date:
+        type: string
+      date_due:
+        type: string
+      description:
+        type: string
+      invoice_number:
+        type: string
+      items:
+        items:
+          $ref: '#/definitions/request.ItemCreateRequest'
+        type: array
+      logo_url:
+        type: string
+      sub_total:
+        type: number
+      total:
+        type: number
+      type_payment:
+        type: string
+    type: object
+  request.ItemCreateRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
+    type: object
   request.LoginRequest:
     properties:
       email:
         type: string
       password:
+        type: string
+    type: object
+  request.ProfileUpdateRequest:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      country:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      phone_number:
+        type: string
+      postal_code:
+        type: string
+      state:
         type: string
     type: object
   request.SendVerifyRequest:
@@ -24,6 +115,15 @@ definitions:
         type: string
     type: object
   response.JSONBadRequestResult:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: boolean
+    type: object
+  response.JSONSuccessDeleteResult:
     properties:
       code:
         type: integer
@@ -54,9 +154,376 @@ definitions:
 info:
   contact: {}
   description: This is a Capstone application
-  title: Capstone application Documentation
+  title: Capstone Application Documentation
   version: "2.0"
 paths:
+  /invoice:
+    post:
+      consumes:
+      - application/json
+      description: Create invoice
+      parameters:
+      - description: required
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.InvoiceCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONBadRequestResult'
+      security:
+      - JWT: []
+      summary: Create new invoice
+      tags:
+      - Invoice
+  /invoice/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete invoice
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.JSONSuccessDeleteResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONBadRequestResult'
+      security:
+      - JWT: []
+      summary: Delete invoice
+      tags:
+      - Invoice
+  /invoice/detail:
+    get:
+      consumes:
+      - application/json
+      description: Get detail invoice by invoice number
+      parameters:
+      - description: invoice_number
+        in: query
+        name: invoice_number
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONBadRequestResult'
+      security:
+      - JWT: []
+      summary: Get detail invoice by invoice number
+      tags:
+      - Invoice
+  /invoice/detail/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get detail invoice by id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONBadRequestResult'
+      security:
+      - JWT: []
+      summary: Get detail invoice by id
+      tags:
+      - Invoice
+  /invoice/file:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create new invoice with Excele
+      parameters:
+      - description: upload file excel
+        in: formData
+        name: files
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONBadRequestResult'
+      security:
+      - JWT: []
+      summary: Create new invoice with Excel
+      tags:
+      - Invoice
+  /invoice/send/{id}:
+    post:
+      consumes:
+      - application/json
+      description: Send Payment And Invoice
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONBadRequestResult'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.JSONBadRequestResult'
+      security:
+      - JWT: []
+      summary: Send payment and invoice
+      tags:
+      - Invoice
+  /invoice/status-payment/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update status payment invoice
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: status
+        enum:
+        - pending
+        - success
+        - expired
+        - failed
+        in: query
+        name: status
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONBadRequestResult'
+      security:
+      - JWT: []
+      summary: Update status payment invoice
+      tags:
+      - Invoice
+  /invoice/status/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update status invoice
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: status
+        enum:
+        - paid
+        - unpaid
+        in: query
+        name: status
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONBadRequestResult'
+      security:
+      - JWT: []
+      summary: Update status invoice
+      tags:
+      - Invoice
+  /invoices:
+    get:
+      consumes:
+      - application/json
+      description: Get list all invoice
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONBadRequestResult'
+      security:
+      - JWT: []
+      summary: Get list all invoice
+      tags:
+      - Invoice
+  /invoices/status:
+    get:
+      consumes:
+      - application/json
+      description: Get list invoice by status and user
+      parameters:
+      - description: status
+        enum:
+        - paid
+        - unpaid
+        in: query
+        name: status
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONBadRequestResult'
+      security:
+      - JWT: []
+      summary: Get list invoice by status and user
+      tags:
+      - Invoice
+  /invoices/user:
+    get:
+      consumes:
+      - application/json
+      description: Get list invoice by user
+      parameters:
+      - description: userid
+        in: query
+        name: userid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONBadRequestResult'
+      security:
+      - JWT: []
+      summary: Get list invoice by  user
+      tags:
+      - Invoice
   /login:
     post:
       consumes:
@@ -92,6 +559,71 @@ paths:
       summary: Login user
       tags:
       - Auth
+  /profile:
+    put:
+      consumes:
+      - application/json
+      description: Update profile
+      parameters:
+      - description: required
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.ProfileUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.JSONBadRequestResult'
+      security:
+      - JWT: []
+      summary: Update profile user
+      tags:
+      - Profile
+  /profile/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Profile detail user
+      parameters:
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.JSONSuccessResult'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.JSONBadRequestResult'
+      security:
+      - JWT: []
+      summary: Get detail profile user
+      tags:
+      - Profile
   /register:
     post:
       consumes:

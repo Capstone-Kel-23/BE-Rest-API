@@ -5,3 +5,18 @@ type VerificationEmailBody struct {
 	Username string
 	Subject  string
 }
+
+type SendPaymentEmailBody struct {
+	URL           string
+	From          string
+	To            string
+	Subject       string
+	InvoiceNumber string
+}
+
+type SendPaymentCashEmailBody struct {
+	From          string
+	To            string
+	Subject       string
+	InvoiceNumber string
+}

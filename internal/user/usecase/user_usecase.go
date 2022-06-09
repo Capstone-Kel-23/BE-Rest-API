@@ -1,6 +1,10 @@
 package usecase
 
-import "github.com/Capstone-Kel-23/BE-Rest-API/domain"
+import (
+	"errors"
+	"github.com/Capstone-Kel-23/BE-Rest-API/domain"
+	uuid "github.com/satori/go.uuid"
+)
 
 type userUsecase struct {
 	userRepository domain.UserRepository
@@ -39,4 +43,33 @@ func (u *userUsecase) GetListAllUsers() (interface{}, error) {
 		})
 	}
 	return users, nil
+}
+
+func (u *userUsecase) GetDetailUserProfile(id string) (interface{}, error) {
+	user, err := u.userRepository.FindWithProfile(id)
+	if err != nil {
+		return nil, err
+	}
+	if user.ID == uuid.FromStringOrNil("") {
+		return nil, errors.New("user not found")
+	}
+
+	var profile interface{}
+	if user.Profile.UserID != uuid.FromStringOrNil("00000000-0000-0000-0000-000000000000") {
+		profile = user.Profile
+	}
+
+	res := map[string]interface{}{
+		"name":       user.Fullname,
+		"username":   user.Username,
+		"id":         user.ID,
+		"role":       user.Roles[0].Name,
+		"email":      user.Email,
+		"verified":   user.Verified,
+		"created_at": user.CreatedAt,
+		"updated_at": user.UpdatedAt,
+		"profile":    profile,
+	}
+
+	return res, nil
 }
