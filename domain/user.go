@@ -15,6 +15,8 @@ type User struct {
 	Password  string    `json:"password" gorm:"notnull"`
 	Verified  bool      `json:"verified"`
 	Roles     []Role    `json:"roles" gorm:"many2many:user_roles;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Profile   Profile   `json:"profile,omitempty" gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Invoices  []Invoice `json:"invoices,omitempty" gorm:"foreignKey:UserID;references:ID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -26,6 +28,7 @@ type UserRepository interface {
 	FindByID(id string) (*User, error)
 	FindByEmail(email string) (*User, error)
 	UpdateVerifiedByEmail(email string, status bool) error
+	FindWithProfile(id string) (*User, error)
 	Save(user *User) (*User, error)
 }
 
@@ -39,4 +42,5 @@ type AuthUsecase interface {
 type UserUsecase interface {
 	GetDetailUserByEmail(email string) (*User, error)
 	GetListAllUsers() (interface{}, error)
+	GetDetailUserProfile(id string) (interface{}, error)
 }
