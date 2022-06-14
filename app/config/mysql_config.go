@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Capstone-Kel-23/BE-Rest-API/domain"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -49,7 +48,7 @@ func InitDB() *gorm.DB {
 }
 
 func InitialMigration() {
-	err := DB.AutoMigrate(&domain.User{}, &domain.Invoice{}, &domain.Item{}, &domain.AdditionalCost{}, &domain.Client{})
+	err := DB.AutoMigrate()
 
 	if err != nil {
 		panic("could not connect to db " + err.Error())
