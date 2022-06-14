@@ -11,14 +11,16 @@ import (
 )
 
 type authUsecase struct {
-	userRepository domain.UserRepository
-	roleRepository domain.RoleRepository
+	userRepository    domain.UserRepository
+	roleRepository    domain.RoleRepository
+	profileRepository domain.ProfileRepository
 }
 
-func NewAuthUsecase(ur domain.UserRepository, rr domain.RoleRepository) domain.AuthUsecase {
+func NewAuthUsecase(ur domain.UserRepository, rr domain.RoleRepository, pr domain.ProfileRepository) domain.AuthUsecase {
 	return &authUsecase{
-		userRepository: ur,
-		roleRepository: rr,
+		userRepository:    ur,
+		roleRepository:    rr,
+		profileRepository: pr,
 	}
 }
 
@@ -75,6 +77,12 @@ func (a *authUsecase) Register(user *request.UserCreateRequest) (*domain.User, e
 	if err != nil {
 		return nil, err
 	}
+	profile := &domain.Profile{
+		ID:     uuid.NewV4(),
+		UserID: userSave.ID,
+		Email:  userSave.Email,
+	}
+	_, _ = a.profileRepository.Save(profile)
 
 	return userSave, nil
 }

@@ -11,9 +11,9 @@ import (
 
 const CONFIG_SMTP_HOST = "smtp.gmail.com"
 const CONFIG_SMTP_PORT = 587
-const CONFIG_SENDER_NAME = "TAGIHIN APP <nrmadi02@gmail.com>"
+const CONFIG_SENDER_NAME = "TAGIHIN APP <admtagihin@gmail.com>"
 const CONFIG_AUTH_EMAIL = "admtagihin@gmail.com"
-const CONFIG_AUTH_PASSWORD = "admintagihin123"
+const CONFIG_AUTH_PASSWORD = "nyjlkhexjgfavskv"
 
 func ParseTemplateDir(dir string) (*template.Template, error) {
 	var paths []string

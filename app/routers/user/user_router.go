@@ -17,4 +17,5 @@ func UserRouter(e *echo.Echo, db *gorm.DB) {
 
 	// User Endpoints
 	e.GET("/api/v1/users", userController.GetListAllUsers, authMiddleware)
+	e.GET("/api/v1/profile/:id", userController.GetDetailProfileUser, authMiddleware)
 }

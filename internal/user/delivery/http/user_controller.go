@@ -9,6 +9,7 @@ import (
 
 type UserController interface {
 	GetListAllUsers(c echo.Context) error
+	GetDetailProfileUser(c echo.Context) error
 }
 
 type userController struct {
@@ -38,4 +39,25 @@ func (u *userController) GetListAllUsers(c echo.Context) error {
 	}
 
 	return response.SuccessResponse(c, http.StatusOK, true, "success get list users", users)
+}
+
+// GetDetailProfileUser godoc
+// @Summary Get detail profile user
+// @Description Profile detail user
+// @Tags Profile
+// @accept json
+// @Produce json
+// @Router /profile/{id} [get]
+// @param id path string true "user id"
+// @Success 200 {object} response.JSONSuccessResult{data=interface{}}
+// @Failure 404 {object} response.JSONBadRequestResult{}
+// @Security JWT
+func (u *userController) GetDetailProfileUser(c echo.Context) error {
+	id := c.Param("id")
+	user, err := u.userUsecase.GetDetailUserProfile(id)
+	if err != nil {
+		return response.FailResponse(c, http.StatusNotFound, false, err.Error())
+	}
+
+	return response.SuccessResponse(c, http.StatusOK, true, "success get profile user", user)
 }

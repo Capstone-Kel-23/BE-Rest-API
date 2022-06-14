@@ -10,6 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 	uuid "github.com/satori/go.uuid"
 	"net/http"
+	"net/mail"
 	"net/url"
 )
 
@@ -78,7 +79,10 @@ func (a *authController) Register(c echo.Context) error {
 	if val, err := validation.ValidateUserCreate(req); val == false {
 		return response.FailResponse(c, http.StatusBadRequest, false, err.Error())
 	}
-
+	_, emailInvalid := mail.ParseAddress(req.Email)
+	if emailInvalid != nil {
+		return response.FailResponse(c, http.StatusBadRequest, false, "email invalid")
+	}
 	code, err := a.validationUsecase.CreateVerifyUser(req.Email, "verify_user")
 	if err != nil {
 		return response.FailResponse(c, http.StatusBadRequest, false, err.Error())
