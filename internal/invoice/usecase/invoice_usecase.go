@@ -263,7 +263,7 @@ func (i *invoiceUsecase) SendPaymentToClient(inv string) (interface{}, error) {
 		return nil, err
 	}
 	templateData := body_email.SendPaymentEmailBody{
-		URL:           "http://103.176.79.65:8080/api/v1/invoice/payment-generate/" + invExist.InvoiceNumber,
+		URL:           "http://prodapi.tagihin.my.id/api/v1/invoice/payment-generate/" + invExist.InvoiceNumber,
 		From:          profileUser.Profile.FirstName + " " + profileUser.Profile.LastName,
 		To:            invExist.Client.FirstName + " " + invExist.Client.LastName,
 		InvoiceNumber: inv,
