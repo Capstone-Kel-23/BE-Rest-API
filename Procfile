@@ -1,1 +1,1 @@
-web: bin/be-tagihin --bind :$PORT
+web: bin/BE-Rest-API --bind :$PORT
