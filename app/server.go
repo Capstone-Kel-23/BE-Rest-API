@@ -40,6 +40,7 @@ func RunServer() {
 	routers.SetupRouter(e, db)
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
+	//port
 	address := fmt.Sprintf(":%s", os.Getenv("PORT"))
 
 	if err := e.Start(address); err != nil {
