@@ -1,1 +1,1 @@
-web: bin/be-tagihin
+web: bin/be-tagihin --bind :$PORT
