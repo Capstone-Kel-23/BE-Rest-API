@@ -2,10 +2,11 @@ package app
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/Capstone-Kel-23/BE-Rest-API/app/routers"
 	template_interface "github.com/Capstone-Kel-23/BE-Rest-API/templates/interface"
 	"github.com/labstack/echo/v4/middleware"
-	"os"
 
 	"github.com/Capstone-Kel-23/BE-Rest-API/app/config"
 	docs "github.com/Capstone-Kel-23/BE-Rest-API/docs"
@@ -39,7 +40,7 @@ func RunServer() {
 	routers.SetupRouter(e, db)
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	address := fmt.Sprintf(":%s", os.Getenv("APP_PORT"))
+	address := fmt.Sprintf(":%s", os.Getenv("PORT"))
 
 	if err := e.Start(address); err != nil {
 		log.Info("shutting down the server")
