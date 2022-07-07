@@ -93,12 +93,13 @@ func (a *authController) Register(c echo.Context) error {
 		Username: req.Username,
 		Subject:  "Verification Email",
 	}
-	err = send_mail.SendEmailVerification(req.Email, templateData)
+
+	createdUser, err := a.authUsecase.Register(&req)
 	if err != nil {
 		return response.FailResponse(c, http.StatusBadRequest, false, err.Error())
 	}
 
-	createdUser, err := a.authUsecase.Register(&req)
+	err = send_mail.SendEmailVerification(req.Email, templateData)
 	if err != nil {
 		return response.FailResponse(c, http.StatusBadRequest, false, err.Error())
 	}
